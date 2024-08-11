@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!-- saved from url=(0115)https://capsulasv2.soyhenry.com/scorm/0af4ac13-4e41-45a5-b9d0-bc23cce7b240/scormcontent/iframe.html?v=1723399589476 -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Lecture scorm</title>
+      <script type="text/javascript" src="./player-0.0.11.min.js.descarga"></script>
+      <script type="text/javascript" src="./lzwcompress.js.descarga"></script>
+    </head>
+    <body style="margin: 0; height: 100vh; overflow: hidden">
+      <script>
+        var progressString = "";
+        var bookmarkUrl = "";
+        window.addEventListener(
+          "message",
+          (event) => {
+            if (event.data.type === "LOAD_SCORM" && event.data.data) {
+              const { progress, last_bookmark, isMobile } = event.data.data;
+              const styleAttribute = isMobile
+                ? "aspect-ratio: 16 / 24; overflow: clip; width: 100%; height: 100vh; overflow-x: hidden"
+                : "aspect-ratio: unset; overflow: clip; width: 100%; height: 100vh";
+              progressString = JSON.stringify(progress);
+              bookmarkUrl = last_bookmark;
+              const iframeSCORM = document.createElement("iframe");
+              iframeSCORM.setAttribute("id", "scorm-iframe");
+              iframeSCORM.setAttribute(
+                "src",
+                last_bookmark ? last_bookmark : "index.html"
+              );
+              iframeSCORM.setAttribute("title", "Lecture scorm");
+              iframeSCORM.setAttribute("width", "100%");
+              iframeSCORM.setAttribute("style", styleAttribute);
+              iframeSCORM.setAttribute("scrolling", "no");
+              iframeSCORM.setAttribute("frameborder", "0");
+              iframeSCORM.setAttribute(
+                "allow",
+                "autoplay; fullscreen; picture-in-picture"
+              );
+              document.body.appendChild(iframeSCORM);
+              document.body.style.margin = "0";
+            }
+          },
+          false
+        );
+        // Variables for using the archive in index.html
+        var GET_STATUS = "";
+        var GET_CHANGE_PROGRESS;
+        // Frontend variables specifically designed for use with SCORM content.
+        var BOOKMARK = "";
+        var GET_SCORE = {};
+        var GetCommitData = function () {
+          if (IS_LECTURE_COMPLETE) {
+            return {
+              progress: GET_CHANGE_PROGRESS,
+              isLectureComplete: IS_LECTURE_COMPLETE,
+              status: GET_STATUS,
+              score: GET_SCORE,
+            };
+          }
+        };
+        var GetScore = function () {
+          console.log(GET_SCORE);
+        };
+        // Functions for using the archive in index.html
+        var CommitData = function () {
+          return GET_CHANGE_PROGRESS;
+        };
+        var ConcedeControl = function () {
+          console.log("control");
+        };
+        var CreateResponseIdentifier = function (data) {
+          console.log(data);
+        };
+        var Finish = function () {
+          console.log("Finish LMS");
+        };
+        var GetDataChunk = function (progress) {
+          if (!progressString) {
+            return JSON.stringify(progress);
+          }
+          return progressString;
+        };
+        var GetStatus = function () {
+          return GET_STATUS;
+        };
+        var MatchingResponse = function (source, target) {
+          console.log("response", source, target);
+        };
+        var RecordFillInInteraction = function (data) {
+          console.log(data);
+        };
+        var RecordMatchingInteraction = function (data) {
+          console.log(data);
+        };
+        var RecordMultipleChoiceInteraction = function (data) {
+          console.log(data);
+        };
+        var ResetStatus = function () {
+          GET_STATUS = "";
+        };
+        function SetBookmark(url) {
+          BOOKMARK = url;
+          window.parent.postMessage({ type: "SET_BOOKMARK", data: url }, "*");
+          return url;
+        }
+        function decompress(stringData) {
+          try {
+            const data = JSON.parse(stringData);
+            return data.d ? JSON.parse(lzwCompress.unpack(data.d)) : data;
+          } catch (e) {
+            return {};
+          }
+        }
+        var SetDataChunk = function (data) {
+          if (typeof data === "string") {
+            var decompressedData = decompress(data);
+            GET_CHANGE_PROGRESS = decompressedData;
+          } else {
+            GET_CHANGE_PROGRESS = data;
+          }
+          if (
+            (GET_CHANGE_PROGRESS &&
+              GET_CHANGE_PROGRESS.progress.p > 0 &&
+              GET_CHANGE_PROGRESS.progress.p < 100) ||
+            !GET_CHANGE_PROGRESS.progress.p
+          ) {
+            GET_STATUS = "IN_PROGRESS";
+          } else if (
+            GET_CHANGE_PROGRESS &&
+            GET_CHANGE_PROGRESS.progress.p === 100
+          )
+            GET_STATUS = "COMPLETED";
+          window.parent.postMessage(
+            {
+              type: "SET_PROGRESS",
+              data: {
+                changeProgress: GET_CHANGE_PROGRESS,
+                status: GET_STATUS,
+              },
+            },
+            "*"
+          );
+        };
+        var SetFailed = function () {
+          GET_STATUS = "failed";
+          return GET_STATUS;
+        };
+        var SetPassed = function () {
+          GET_STATUS = "passed";
+          return GET_STATUS;
+        };
+        var SetReachedEnd = function () {
+          IS_LECTURE_COMPLETE = true;
+          return IS_LECTURE_COMPLETE;
+        };
+        var SetScore = function (highScore, maxScore, scaledScore) {
+          GET_SCORE = {
+            highScore,
+            maxScore,
+            scaledScore,
+          };
+        };
+        var WriteToDebug = function (str) {
+          console.log(str);
+        };
+      </script>
+    
+  <iframe id="scorm-iframe" src="./index.html" title="Lecture scorm" width="100%" style="aspect-ratio: 16 / 24; overflow: clip; width: 100%; height: 100vh; overflow-x: hidden" scrolling="no" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"></iframe></body></html>
