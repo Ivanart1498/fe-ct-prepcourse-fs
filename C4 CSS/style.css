@@ -1,6 +1,27 @@
-body{
-    background-color: chocolate;
+header{
+    background-color: blue;
+    
 }
-h3{
-    background-color: burlywood;
+.minombre{
+    color: violet;
+}
+.title{
+    font-size: 50px;
+    background-color: gold;
+    color: crimson;
+}
+
+#principal{
+    font-size: 90px;
+    color: green;
+    background-color: goldenrod;
+}
+#tamaño{
+    font-size: 15px;
+    width: 150px;
+    border-right: 150px;
+}
+.logo{
+    font-size: 20px;
+    width: 200px;
 }
